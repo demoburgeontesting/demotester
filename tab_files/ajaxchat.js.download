@@ -1,0 +1,166 @@
+var contentchtname;
+        $(document).ready(function () {
+            bindbuddy();
+            $('#chatoption').hide();
+            $('#btnsendmsg').click(function () {
+                if ($('#txtchat').val().trim() == "") {
+                    return false; 
+                }                
+                // dynamically add chat message on it.
+                var chtmsg = "<div><img src='' alt='demo'/><p>" + $('#txtchat').val() + "</p></div>";                
+                $("#" + contentchtname).append(chtmsg);
+                // send data to db through ajax, for next user.
+                ajaxpost();
+               
+            });
+
+            $("#documents a").click(function() {
+                addTab($(this));
+                $('#chatoption').show();
+            });
+
+            $('#tabs a.tab').live('click', function () {               
+                // Get the tab name               
+                var contentname = $(this).attr("id") + "_content";                
+                // hide all other tabs              
+                $("#content div").hide();
+                $("#tabs li").removeClass("current");
+                // show current tab
+                contentchtname = contentname;
+                $("#" + contentname).show();
+                $("#" + contentname).children().show();
+                $(this).parent().addClass("current");
+            });
+
+            $('#tabs a.remove').live('click', function() {
+                // Get the tab name
+                var tabid = $(this).parent().find(".tab").attr("id");
+                // remove tab and related content
+                var contentname = tabid + "_content";
+                $("#" + contentname).remove();
+                $(this).parent().remove();
+                // if there is no current tab and if there are still tabs left, show the first one
+                if ($("#tabs li.current").length == 0 && $("#tabs li").length > 0) {                    
+                    // find the first tab    
+                    var firsttab = $("#tabs li:first-child");
+                    firsttab.addClass("current");
+                    // get its link name and show related content
+                    var firsttabid = $(firsttab).find("a.tab").attr("id");
+                    $("#" + firsttabid + "_content").show();
+                    contentchtname = firsttabid + "_content";
+                }
+                else if ($("#tabs li").length > 0) {
+
+                }
+                else {                   
+                    contentchtname = "";
+                    $('#chatoption').hide();
+                }
+            });
+        });
+        function addTab(link) {
+            // If tab already exist in the list, return            
+            if ($("#" + $(link).attr("rel")).length != 0) {
+                var contentname = $(link).attr("rel") + "_content";                
+                // hide all other tabs              
+                $("#content div").hide();
+                $("#tabs li").removeClass("current");
+                // show current tab
+                contentchtname = contentname;
+                $("#" + contentname).show();
+                $("#" + contentname).children().show();
+                $("#" + $(link).attr("rel")).parent().addClass("current");
+                return;
+            }
+                           
+            // hide other tabs
+            $("#tabs li").removeClass("current");
+            $("#content div").hide();                       
+            // add new tab and related content
+            $("#tabs").append("<li class='current'><a class='tab' id='" + $(link).attr("rel") + "' href='#'>" + $(link).html() + "</a><a href='#' class='remove'>x</a></li>");            
+            contentchtname = $(link).attr("rel") + "_content";
+            $("#content").append("<div id='" + $(link).attr("rel") + "_content'>" + $(link).attr("title") + "</div>");                
+            $("#" + $(link).attr("rel") + "_content").show();
+        }
+
+
+
+        function ajaxpost() {// save and fetch chat messages 
+
+            $.ajax({
+                type: "POST",
+                url:  'blog/Default.aspx/BlogPost',// will update mehtod url 
+                data: "{'pageIndex':5}",// will update method parameters
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                   
+                },
+                failure: function (response) {
+                },
+                error: function (response) {
+                },
+                complete: function () {
+                    ajaxget();
+                    $('#txtchat').val('');
+                }
+            })
+        }
+        function ajaxget() {// function to retrive record time to time, and append, and how notification on tab header
+
+            $.ajax({
+                type: "POST",
+                url:  'blog/Default.aspx/BlogPost',// will update mehtod url 
+                data: "{'pageIndex':5}",// will update method parameters
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    
+                },
+                failure: function (response) {
+                },
+                error: function (response) {
+                },
+                complete: function () {
+                   
+                }
+            })
+        }
+
+        function bindbuddy() {
+            // here we will bind user friends.
+            /*$.ajax({
+                type: "POST",
+                url: 'blog/Default.aspx/BlogPost',// will update mehtod url 
+                data: "{'pageIndex':5}", // will update method parameters
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var vlist = "";
+                    vlist = vlist + "<li><a rel='Document1' title='1'>Ram</a></li>";
+                    vlist = vlist + "<li><a rel='Document2' title='2'>Mohan</a></li>";
+                    vlist = vlist + "<li><a rel='Document3' title='3'>Tarun</a></li>";
+                    vlist = vlist + "<li><a rel='Document4' title='4'>Vasnavi</a></li>";
+                    vlist = vlist + "<li><a rel='Document5' title='5'>Viveka</a></li>";
+                    $('#documents').append(vlist);
+                },
+                failure: function (response) {
+                },
+                error: function (response) {
+                },
+                complete: function () {                    
+                }
+            });  */
+			var vlist = "";
+                    vlist = vlist + "<li><a rel='Document1' title='1'>Ram</a></li>";
+                    vlist = vlist + "<li><a rel='Document2' title='2'>Mohan</a></li>";
+                    vlist = vlist + "<li><a rel='Document3' title='3'>Tarun</a></li>";
+                    vlist = vlist + "<li><a rel='Document4' title='4'>Vasnavi</a></li>";
+                    vlist = vlist + "<li><a rel='Document5' title='5'>Viveka</a></li>";
+					vlist = vlist + "<li><a rel='Document11' title='11'>Mohit</a></li>";
+                    vlist = vlist + "<li><a rel='Document12' title='12'>Puran</a></li>";
+                    vlist = vlist + "<li><a rel='Document13' title='13'>mukesh</a></li>";
+                    vlist = vlist + "<li><a rel='Document14' title='14'>Dinesh</a></li>";
+                    vlist = vlist + "<li><a rel='Document15' title='15'>Deepika</a></li>";
+                    $('#documents').append(vlist);                      
+        }
